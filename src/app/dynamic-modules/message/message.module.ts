@@ -11,4 +11,5 @@ import { MessageComponent } from './message.component';
     DynamicComponentLoaderModule.forChild(MessageComponent),
   ],
 })
-export class MessageModule {}
+export class MessageModule {
+}

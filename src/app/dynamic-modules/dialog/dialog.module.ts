@@ -1,21 +1,22 @@
-import { NgModule } from '@angular/core'
-import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module'
-import { DialogComponent } from './dialog.component'
+import { NgModule } from '@angular/core';
+import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
+import { DialogComponent } from './dialog.component';
+import { MatDialogRef } from '@angular/material';
 
 @NgModule({
-  declarations: [
-    DialogComponent,
-  ],
-  exports: [
-    DialogComponent,
-  ],
-  imports: [
-    DynamicComponentLoaderModule.forModule({
-      componentId: 'dialog',
-      path: 'dialog',
-      loadChildren: './content/content.module#ContentModule',
-    }),
-  ],
+    declarations: [
+        DialogComponent,
+    ],
+    exports: [
+        DialogComponent,
+    ],
+    imports: [
+        DynamicComponentLoaderModule.forModule({
+            componentId: 'dialog',
+            path: 'dialog',
+            loadChildren: './content/content.module#ContentModule',
+        }),
+    ],
 })
 export class DialogModule {
 }
