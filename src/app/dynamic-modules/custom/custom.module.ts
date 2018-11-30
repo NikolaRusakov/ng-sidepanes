@@ -4,12 +4,12 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { CustomComponent } from './custom.component';
 
 @NgModule({
-  declarations: [
-    CustomComponent,
-  ],
-  imports: [
-    DynamicComponentLoaderModule.forChild(CustomComponent),
-  ],
+    declarations: [
+        CustomComponent,
+    ],
+    imports: [
+        DynamicComponentLoaderModule.forChild(CustomComponent),
+    ],
 })
 export class CustomModule {
 }

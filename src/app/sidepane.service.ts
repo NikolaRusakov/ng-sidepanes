@@ -1,10 +1,15 @@
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import { CustomComponent } from './dynamic-modules/custom/custom.component';
 
 
-@Injectable()
+@Injectable({
+  providedIn: CustomComponent,
+})
 export class SidepaneService {
-  public width: number;
+  width: number;
+  headerOutlet: ComponentRef<any>;
+  bodyOutlet: ComponentRef<any>;
+  footerOutlet: ComponentRef<any>;
 
   constructor() {
   }

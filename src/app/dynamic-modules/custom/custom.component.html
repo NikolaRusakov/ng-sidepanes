@@ -1,3 +1,13 @@
 <div class="card" [style.right.px]="config.data.position" #sidepaneContainer>
-<h1>{{config.data.header}}</h1>
+    <h1>{{config.data.content}}</h1>
+
+    <ng-template #headerOutlet>
+    </ng-template>
+
+    <ng-template #bodyOutlet>
+    </ng-template>
+
+    <ng-template #footerOutlet>
+    </ng-template>
+
 </div>
