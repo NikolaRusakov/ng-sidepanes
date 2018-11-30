@@ -7,9 +7,9 @@ export interface SidepaneHeap {
 
 @Injectable()
 export class FactoryService {
-    public store: Array<any> = [];
-    public sidepanesWidthState: Array<number> = [];
-    public sidepanesWidth: Array<number> = [];
+    store: any[] = [];
+    sidepanesWidthState: number[] = [];
+    sidepanesWidth: number[] = [];
 
     constructor() {
     }
@@ -17,12 +17,9 @@ export class FactoryService {
     addSidepane(componentInstance: any) {
         this.store = [
             ...this.store,
-            componentInstance
+            componentInstance,
         ];
-        // this.store = [...this.store, type];
-        // console.log(this.store[0].);
     }
-
 
     calculateWidthState(width: number) {
         const calculatedNumber = this.sidepanesWidthState[this.sidepanesWidthState.length - 1] ?
@@ -39,6 +36,6 @@ export class FactoryService {
     }
 
     getLastWidth(): number {
-        return 0;
+        return this.sidepanesWidthState[this.sidepanesWidth.length - 1];
     }
 }
