@@ -1,0 +1,10 @@
+<div #sidepaneContainer class="card" [style.right.px]="sidepanePosition"
+     [@transition]="config.data.open ? 'open' : 'closed'">
+    <div *ngIf="config.data.content">
+        <h1>{{config.data.content}}</h1>
+    </div>
+    <div class="body">
+        <ng-template #childComponent>
+        </ng-template>
+    </div>
+</div>

@@ -4,30 +4,37 @@ import {
     ComponentRef,
     ElementRef,
     Injector,
+    OnInit,
     QueryList,
     Type,
     ViewChild,
     ViewChildren,
     ViewContainerRef,
 } from '@angular/core';
-import { MatDialog } from '@angular/material';
 
 import { DynamicComponentLoader } from './dynamic-component-loader/dynamic-component-loader.service';
 import { CustomInjector, SidepaneData } from './dynamic-modules/custom-injector';
-import { CustomComponent } from './dynamic-modules/custom/custom.component';
-import { DialogComponent } from './dynamic-modules/dialog/dialog.component';
 import { MessageComponent } from './dynamic-modules/message/message.component';
 import { SidepaneRef } from './dynamic-modules/sidepane-ref';
+import { SidepaneComponent } from './dynamic-modules/sidepane/sidepane.component';
 import { FactoryService } from './factory.service';
+
+export function* sum() {
+    let num = 1;
+    while (true) {
+        yield num;
+        num = num + 1;
+    }
+}
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     providers: [FactoryService],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
-    componentRef: ComponentRef<Type<any>>;
+    componentRef: ComponentRef<any>;
 
     @ViewChild('testOutlet', {read: ViewContainerRef}) testOutlet: ViewContainerRef;
 
@@ -36,65 +43,66 @@ export class AppComponent implements AfterViewInit {
 
     @ViewChild('testOutlet', {read: ElementRef}) elementRef: ElementRef;
 
+    gen = sum();
+
     constructor(
         private dynamicComponentLoader: DynamicComponentLoader,
-        private dialog: MatDialog,
         private factoryService: FactoryService,
         private injector: Injector,
     ) {
+    }
+
+    ngOnInit() {
+        this.factoryService.parent = this;
     }
 
     ngAfterViewInit() {
     }
 
     loadMessage() {
-        this.loadComponent<MessageComponent>('message');
+        this.loadComponent(MessageComponent, 'message');
     }
 
     loadCustom() {
         const lastSidepane = this.factoryService.getLastWidthState();
         console.log(lastSidepane);
+
         const config = {
             data: {
-                content: this.inputComponent.nativeElement.value,
-                position: lastSidepane ? lastSidepane : 0,
+                content: /*this.inputComponent.nativeElement.value*/this.gen.next().value,
+                open: true,
                 dynamicComponents: {
-                    headerOutlet: MessageComponent,
-                    bodyOutlet: MessageComponent,
-                    footerOutlet: MessageComponent,
+                    childComponent: MessageComponent,
                 },
             },
         };
+        // const components = {
+        //     dynamicComponents: {
+        //         headerOutlet: MessageComponent,
+        //         bodyOutlet: SidepaneComponent,
+        //         footerOutlet: MessageComponent,
+        //     },
+        // };
         const map = new WeakMap();
         map.set(SidepaneData, config);
-
         const sidepaneRef = new SidepaneRef();
         map.set(SidepaneRef, sidepaneRef);
-        this.loadComponent<CustomComponent>('custom', map);
+        this.loadComponent(SidepaneComponent, 'sidepane', map);
     }
 
-    loadComponent<T>(componentId: string, customInjectorMap?: WeakMap<Type<any>, any>) {
+    loadComponent<T>(component: T, componentId: string, customInjectorMap?: WeakMap<Type<any>, any>) {
 
         const injector = customInjectorMap ? new CustomInjector(this.injector, customInjectorMap) : this.injector;
-        console.log(componentId);
-        console.log(customInjectorMap);
         this.dynamicComponentLoader
             .getComponentFactory<T>(componentId, injector)
             .subscribe(componentFactory => {
                 const ref = this.testOutlet.createComponent(componentFactory);
-                console.log(ref);
-                // if (dynamicComponents) {
-                //     Object.entries(dynamicComponents).forEach(([key, value]) => {
-                //         ref.instance[key] = value;
-                //     });
-                // }
+                ref.instance.cmpRef = ref;
+
                 ref.changeDetectorRef.detectChanges();
             }, error => {
                 console.warn(error);
             });
     }
 
-    showDialog() {
-        this.dialog.open(DialogComponent);
-    }
 }

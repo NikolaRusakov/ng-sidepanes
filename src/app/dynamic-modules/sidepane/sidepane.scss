@@ -1,0 +1,16 @@
+.card {
+  //display: grid;
+  border: 1px solid;
+  max-width: 50vw;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  background-color: bisque;
+
+  .body {
+    height: 100%;
+  }
+
+}
+

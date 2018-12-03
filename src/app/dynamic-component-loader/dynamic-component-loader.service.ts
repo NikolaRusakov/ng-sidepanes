@@ -1,72 +1,71 @@
 import { ComponentFactory, Inject, Injectable, Injector, NgModuleFactory, NgModuleFactoryLoader } from '@angular/core';
 
+import { Observable } from 'rxjs/internal/Observable';
+import { from } from 'rxjs/internal/observable/from';
+import { throwError } from 'rxjs/internal/observable/throwError';
 import {
-  DYNAMIC_COMPONENT,
-  DYNAMIC_COMPONENT_MANIFESTS,
-  DYNAMIC_MODULE,
-  DynamicComponentManifest,
+    DYNAMIC_COMPONENT,
+    DYNAMIC_COMPONENT_MANIFESTS,
+    DYNAMIC_MODULE,
+    DynamicComponentManifest,
 } from './dynamic-component-manifest';
-import { Observable, throwError, from } from 'rxjs';
 
 @Injectable()
 export class DynamicComponentLoader {
 
-  constructor(
-    @Inject(DYNAMIC_COMPONENT_MANIFESTS) private manifests: DynamicComponentManifest[],
-    private loader: NgModuleFactoryLoader,
-    private injector: Injector,
-  ) {
-  }
-
-  /** Retrieve a ComponentFactory, based on the specified componentId (defined in the DynamicComponentManifest array). */
-  getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
-    const manifest = this.manifests
-      .find(m => m.componentId === componentId);
-    if (!manifest) {
-      return throwError(`DynamicComponentLoader: Unknown componentId "${componentId}"`);
+    constructor(
+        @Inject(DYNAMIC_COMPONENT_MANIFESTS) private manifests: DynamicComponentManifest[],
+        private loader: NgModuleFactoryLoader,
+        private injector: Injector,
+    ) {
     }
 
-    const path = manifest.loadChildren;
+    /** Retrieve a ComponentFactory, based on the specified componentId (defined in the DynamicComponentManifest array). */
+    getComponentFactory<T>(componentId: string, injector?: Injector): Observable<ComponentFactory<T>> {
+        const manifest = this.manifests
+            .find(m => m.componentId === componentId);
+        if (!manifest) {
+            return throwError(`DynamicComponentLoader: Unknown componentId "${componentId}"`);
+        }
 
-    const p = this.load<T>(path, componentId, injector);
-    return from(p);
-  }
+        const path = manifest.loadChildren;
 
-  load<T>(path: string, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
-    // console.log(path);
-    return this.loader.load(path)
-      .then((ngModuleFactory) => this.loadFactory<T>(ngModuleFactory, componentId, injector));
-  }
-
-  loadFactory<T>(ngModuleFactory: NgModuleFactory<any>, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
-    const moduleRef = ngModuleFactory.create(injector || this.injector);
-    const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT, null);
-    if (!dynamicComponentType) {
-      const dynamicModule: DynamicComponentManifest = moduleRef.injector.get(DYNAMIC_MODULE, null);
-
-      if (!dynamicModule) {
-        throw new Error(
-          'DynamicComponentLoader: Dynamic module for'
-          + ` componentId "${componentId}" does not contain`
-          + ' DYNAMIC_COMPONENT or DYNAMIC_MODULE as a provider.',
-        );
-      }
-      if (dynamicModule.componentId !== componentId) {
-        throw new Error(
-          'DynamicComponentLoader: Dynamic module for'
-          + `${componentId} does not match manifest.`,
-        );
-      }
-
-      const path = dynamicModule.loadChildren;
-      console.log(dynamicModule);
-      if (!path) {
-        throw new Error(`${componentId} unknown!`);
-      }
-
-      return this.load<T>(path, componentId, injector);
+        const p = this.load<T>(path, componentId, injector);
+        return from(p);
     }
-    // console.log(DYNAMIC_COMPONENT, dynamicComponentType);
-    return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));
-  }
+
+    load<T>(path: string, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
+        return this.loader.load(path)
+            .then((ngModuleFactory) => this.loadFactory<T>(ngModuleFactory, componentId, injector));
+    }
+
+    loadFactory<T>(ngModuleFactory: NgModuleFactory<any>, componentId: string, injector?: Injector): Promise<ComponentFactory<T>> {
+        const moduleRef = ngModuleFactory.create(injector || this.injector);
+        const dynamicComponentType = moduleRef.injector.get(DYNAMIC_COMPONENT, null);
+        if (!dynamicComponentType) {
+            const dynamicModule: DynamicComponentManifest = moduleRef.injector.get(DYNAMIC_MODULE, null);
+
+            if (!dynamicModule) {
+                throw new Error(
+                    'DynamicComponentLoader: Dynamic module for '
+                    + ` componentId "${componentId}" does not contain`
+                    + ' DYNAMIC_COMPONENT or DYNAMIC_MODULE as a provider.',
+                );
+            }
+            if (dynamicModule.componentId !== componentId) {
+                throw new Error(
+                    'DynamicComponentLoader: Dynamic module for '
+                    + `${componentId} does not match manifest.`,
+                );
+            }
+
+            const path = dynamicModule.loadChildren;
+            if (!path) {
+                throw new Error(`${componentId} unknown!`);
+            }
+
+            return this.load<T>(path, componentId, injector);
+        }
+        return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));
+    }
 }

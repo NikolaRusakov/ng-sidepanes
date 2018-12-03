@@ -4,12 +4,16 @@ import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dyn
 import { MessageComponent } from './message.component';
 
 @NgModule({
-  declarations: [
-    MessageComponent,
-  ],
-  imports: [
-    DynamicComponentLoaderModule.forChild(MessageComponent),
-  ],
+    declarations: [
+        MessageComponent,
+    ],
+    imports: [
+        DynamicComponentLoaderModule.forChild(MessageComponent),
+    ],
+    exports: [
+        DynamicComponentLoaderModule,
+        MessageComponent,
+    ],
 })
 export class MessageModule {
 }

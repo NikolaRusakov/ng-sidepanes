@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { MatDialogRef } from '@angular/material'
 import { DialogComponent } from '../dialog.component'
 
 @Component({
@@ -11,7 +10,7 @@ import { DialogComponent } from '../dialog.component'
 })
 export class ContentComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogComponent>) {
+  constructor() {
   }
 
 }

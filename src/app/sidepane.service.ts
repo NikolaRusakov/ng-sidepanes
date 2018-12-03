@@ -1,17 +1,13 @@
-import { ComponentRef, Injectable } from '@angular/core';
-import { CustomComponent } from './dynamic-modules/custom/custom.component';
-import { CustomModule } from './dynamic-modules/custom/custom.module';
-import { AppModule } from './app.module';
+import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
 
-
-@Injectable({
-  providedIn: AppModule,
-})
+@Injectable(
+  // {
+  // providedIn: SidepaneComponent,
+  // }
+  )
 export class SidepaneService {
   width: number;
-  headerOutlet: ComponentRef<any>;
-  bodyOutlet: ComponentRef<any>;
-  footerOutlet: ComponentRef<any>;
+  onSubmit = new EventEmitter();
 
   constructor() {
   }

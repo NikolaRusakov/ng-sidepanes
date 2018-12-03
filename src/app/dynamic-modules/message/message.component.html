@@ -1,1 +1,4 @@
-<h2>Dynamically-loaded content!</h2>
+<h2>Dynamically-loaded content</h2>
+<input type="text" placeholder="text" (keyup.enter)="onSubmit(input.value)" #input>
+<button type="button" (click)="onClose()">destroy</button>
+<button type="button" (click)="onCreate()">create new</button>
