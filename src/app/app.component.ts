@@ -17,7 +17,7 @@ import { CustomInjector, SidepaneData } from './dynamic-modules/custom-injector'
 import { MessageComponent } from './dynamic-modules/message/message.component';
 import { SidepaneRef } from './dynamic-modules/sidepane-ref';
 import { SidepaneComponent } from './dynamic-modules/sidepane/sidepane.component';
-import { FactoryService } from './factory.service';
+import { SidepaneService } from './sidepane.service';
 
 export function* sum() {
     let num = 1;
@@ -30,7 +30,7 @@ export function* sum() {
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    providers: [FactoryService],
+    providers: [SidepaneService],
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
@@ -47,62 +47,39 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     constructor(
         private dynamicComponentLoader: DynamicComponentLoader,
-        private factoryService: FactoryService,
+        private sidepaneService: SidepaneService,
         private injector: Injector,
     ) {
     }
 
     ngOnInit() {
-        this.factoryService.parent = this;
+        this.sidepaneService.parent = this;
     }
 
     ngAfterViewInit() {
     }
 
     loadMessage() {
-        this.loadComponent(MessageComponent, 'message');
+        this.sidepaneService.loadComponent(MessageComponent, 'message', this.testOutlet);
     }
 
     loadCustom() {
-        const lastSidepane = this.factoryService.getLastWidthState();
+        const lastSidepane = this.sidepaneService.getLastWidthState();
         console.log(lastSidepane);
 
         const config = {
             data: {
-                content: /*this.inputComponent.nativeElement.value*/this.gen.next().value,
+                content: this.gen.next().value,
                 open: true,
                 dynamicComponents: {
                     childComponent: MessageComponent,
                 },
             },
         };
-        // const components = {
-        //     dynamicComponents: {
-        //         headerOutlet: MessageComponent,
-        //         bodyOutlet: SidepaneComponent,
-        //         footerOutlet: MessageComponent,
-        //     },
-        // };
         const map = new WeakMap();
         map.set(SidepaneData, config);
         const sidepaneRef = new SidepaneRef();
         map.set(SidepaneRef, sidepaneRef);
-        this.loadComponent(SidepaneComponent, 'sidepane', map);
+        this.sidepaneService.loadComponent(SidepaneComponent, 'sidepane', this.testOutlet, map);
     }
-
-    loadComponent<T>(component: T, componentId: string, customInjectorMap?: WeakMap<Type<any>, any>) {
-
-        const injector = customInjectorMap ? new CustomInjector(this.injector, customInjectorMap) : this.injector;
-        this.dynamicComponentLoader
-            .getComponentFactory<T>(componentId, injector)
-            .subscribe(componentFactory => {
-                const ref = this.testOutlet.createComponent(componentFactory);
-                ref.instance.cmpRef = ref;
-
-                ref.changeDetectorRef.detectChanges();
-            }, error => {
-                console.warn(error);
-            });
-    }
-
 }

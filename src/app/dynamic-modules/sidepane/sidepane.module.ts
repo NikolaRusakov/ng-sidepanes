@@ -5,20 +5,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { LazyLoadedModule } from '../../lazy-loaded/lazy-loaded.module';
 import { SidepaneComponent } from './sidepane.component';
+// import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
-    declarations: [
-        SidepaneComponent,
-    ],
-    imports: [
-        CommonModule,
-        DynamicComponentLoaderModule.forChild(SidepaneComponent),
-        LazyLoadedModule,
-    ],
-    exports: [
-        DynamicComponentLoaderModule,
-        SidepaneComponent,
-    ],
+  declarations: [
+    SidepaneComponent,
+  ],
+  imports: [
+    CommonModule,
+    DynamicComponentLoaderModule.forChild(SidepaneComponent),
+    LazyLoadedModule,
+  ],
+  exports: [
+    DynamicComponentLoaderModule,
+    SidepaneComponent,
+  ],
 })
 export class SidepaneModule {
 }
