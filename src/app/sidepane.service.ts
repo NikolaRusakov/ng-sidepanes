@@ -42,13 +42,17 @@ export class SidepaneService {
         ];
     }
 
-    calculateWidthState(width: number) {
-        this.sidepanesWidthState.length > 0 && this.sidepanesWidthState.reverse();
+    calculateWidthState() {
+        const width = this.sidepanesWidth;
+        const widthState = this.sidepanesWidthState;
 
-        const calculatedNumber = this.sidepanesWidthState.length > 0 ?
-            (this.sidepanesWidthState.length - 1 > 0 ?
-                this.sidepanesWidthState[this.sidepanesWidthState.length - 1] + width : width) : 0;
-        this.sidepanesWidthState.push(calculatedNumber);
+        widthState.length > 0 && widthState.reverse();
+
+        const calculatedNumber = (widthState.length > 0) ?
+            (widthState.length - 1 > 0 ? width[width.length - 1] + widthState[widthState.length - 1] :
+                width[width.length - 1]) : 0;
+
+        widthState.push(calculatedNumber);
     }
 
     addSidepanesWidth(width: number) {
@@ -56,7 +60,7 @@ export class SidepaneService {
     }
 
     addSidepanesWidthOb(width: number) {
-        this.calculateWidthState(width);
+        this.calculateWidthState();
         this.addSidepanesWidth(width);
         this.sidepanesWidthState.reverse();
         console.log(this.sidepanesWidthState);

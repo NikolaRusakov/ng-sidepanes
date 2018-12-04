@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DynamicComponentLoaderModule } from '../dynamic-component-loader/dynamic-component-loader.module';
 import { DynamicComponentManifest } from '../dynamic-component-loader/dynamic-component-manifest';
 import { MessageModule } from '../dynamic-modules/message/message.module';
+import { RoutedSidepaneModule } from '../dynamic-modules/routed-sidepane/routed-sidepane.module';
+import { AddIntroducerModule } from '../dynamic-modules/add-introducer/add-introducer.module';
 
 const manifests: DynamicComponentManifest[] = [
   {
@@ -24,10 +26,13 @@ const manifests: DynamicComponentManifest[] = [
   imports: [
     DynamicComponentLoaderModule.forRoot(manifests),
     MessageModule,
+    RoutedSidepaneModule
   ], exports:
     [
       DynamicComponentLoaderModule,
       MessageModule,
+      RoutedSidepaneModule,
+      AddIntroducerModule
     ],
 })
 export class LazyLoadedModule {

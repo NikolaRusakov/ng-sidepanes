@@ -1,0 +1,13 @@
+<!--<app-router-sidepane>-->
+
+<app-routed-sidepane>
+  <div childComponent>
+    <input type="text" placeholder="text" (keyup.enter)="onSubmit(input.value)" #input>
+    <button type="button" (click)="onClose()">destroy</button>
+    <button type="button" (click)="onCreate()">create new</button>
+    <br>
+    <button type="button" routerLink="../">Go back</button>
+  </div>
+</app-routed-sidepane>
+<router-outlet></router-outlet>
+<!--</app-router-sidepane>-->

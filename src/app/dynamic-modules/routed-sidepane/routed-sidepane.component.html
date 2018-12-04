@@ -1,0 +1,9 @@
+<div #sidepaneContainer class="card"
+     [ngStyle]="{
+       'right':sidepanePosition+'px',
+       '':''
+     }">
+  <ng-content select="[childComponent]">
+
+  </ng-content>
+</div>
