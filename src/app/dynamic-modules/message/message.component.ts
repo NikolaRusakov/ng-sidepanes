@@ -27,7 +27,6 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.sidepaneService.getLastWidthState());
   }
 
   onSubmit(value) {

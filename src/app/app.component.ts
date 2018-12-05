@@ -64,7 +64,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     loadCustom() {
-        const lastSidepane = this.sidepaneService.getLastWidthState();
         console.log(lastSidepane);
 
         const config = {

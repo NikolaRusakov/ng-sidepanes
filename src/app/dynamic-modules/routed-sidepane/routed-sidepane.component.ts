@@ -32,7 +32,6 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
 
   private sidepanePosition: number;
   private sidepaneIndex: number;
-  private indexModified = false;
 
   @Input()
   cmpRef?: ComponentRef<SidepaneComponent>;
@@ -59,16 +58,6 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
     this.sidepaneService.addSidepane(this);
     this.sidepaneService.storeObserve.pipe(takeUntil(this.unsubscribe$))
       .subscribe(item => {
-        const addIndex = item.state.added && !item.state.modified;
-        const increaseIndex = item.state.added && item.state.modified;
-        const decreaseIndex = item.state.modified && item.state.removed;
-        if (!this.indexModified) {
-          this.indexModified = true;
-          console.log('again');
-        } else {
-          console.log('compute');
-        }
-        console.log(item.widthState);
         this.sidepanePosition = item.widthState[this.sidepaneIndex];
       });
   }
