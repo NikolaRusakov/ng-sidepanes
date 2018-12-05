@@ -26,7 +26,7 @@ export class RoutingStateService {
   }
 
   getPreviousUrl(): string {
-    console.log(this.history);
+    // console.log(this.history);
     const previousIndex = this.history.length - 2;
     const previousRoute = this.history.filter((index, item) => index > 0 && index <= previousIndex)
       .map(item => `/${item}`).join('');

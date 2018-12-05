@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RoutingStateService } from '../../routing-state.service';
 
 @Component({
-  selector: 'app-select-primary-contact',
-  templateUrl: './select-primary-contact.component.html',
-  styleUrls: ['./select-primary-contact.component.css']
+  selector: 'app-add-phone-number',
+  templateUrl: './add-phone-number.component.html',
+  styleUrls: ['./add-phone-number.component.css']
 })
-export class SelectPrimaryContactComponent implements OnInit {
+export class AddPhoneNumberComponent implements OnInit {
 
   constructor(
     private location: Location,
@@ -22,10 +22,6 @@ export class SelectPrimaryContactComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  onNavigate() {
-    this.router.navigate(['1', '2', '3', '4']);
   }
 
   onBack() {

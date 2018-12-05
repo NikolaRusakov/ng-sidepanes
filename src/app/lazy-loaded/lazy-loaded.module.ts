@@ -7,6 +7,7 @@ import { DynamicComponentManifest } from '../dynamic-component-loader/dynamic-co
 import { MessageModule } from '../dynamic-modules/message/message.module';
 import { RoutedSidepaneModule } from '../dynamic-modules/routed-sidepane/routed-sidepane.module';
 import { AddIntroducerModule } from '../dynamic-modules/add-introducer/add-introducer.module';
+import { AddPhoneNumberModule } from '../dynamic-modules/add-phonenumber/add-phone-number.module';
 
 const manifests: DynamicComponentManifest[] = [
   {
@@ -26,7 +27,8 @@ const manifests: DynamicComponentManifest[] = [
   imports: [
     DynamicComponentLoaderModule.forRoot(manifests),
     MessageModule,
-    RoutedSidepaneModule
+    RoutedSidepaneModule,
+    AddPhoneNumberModule
   ], exports:
     [
       DynamicComponentLoaderModule,

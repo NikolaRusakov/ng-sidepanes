@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-introducer',
@@ -10,9 +11,13 @@ export class AddIntroducerComponent implements OnInit {
 
   constructor(
     private location: Location,
-  ) { }
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+  ) {
+  }
 
   ngOnInit() {
+    console.log(this.activatedRoute);
   }
 
   onSubmit(value) {
@@ -25,9 +30,14 @@ export class AddIntroducerComponent implements OnInit {
     // this.sidepaneComponent.onClose();
   }
 
-  onCreate() {
-  //   this.sidepaneService.parent.loadCustom();
+  onNavigate() {
+    this.router.navigate(['1', '2']);
   }
+
+  onCreate() {
+    //   this.sidepaneService.parent.loadCustom();
+  }
+
   onBack() {
     this.location.back();
   }
