@@ -1,14 +1,30 @@
 <!--<app-router-sidepane>-->
-
-<app-routed-sidepane>
+<!--<h1>{{sidepaneEvent}}</h1>-->
+<app-routed-sidepane #pane [width]="width" [sidepaneIndex]="sidepaneIndex" [sidepanePosition]="sidepanePosition">
   <div childComponent>
+
     <input type="text" placeholder="text" (keyup.enter)="onSubmit(input.value)" #input>
     <button type="button" (click)="onClose()">destroy</button>
     <button type="button" (click)="onCreate()">create new</button>
     <br>
     <button type="button" routerLink="../">Go back</button>
-    <button type="button" (click)="onNavigate()">forward</button>
+    <button type="button" (click)="onNavigate(false)">forward</button>
+    <button type="button" (click)="onNavigate(true)">short version forward</button>
   </div>
 </app-routed-sidepane>
-<router-outlet></router-outlet>
-<!--</app-router-sidepane>-->
+<!--<div [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"-->
+     <!--[@moveAnim]="o.isActivated ? {value:'out',params: { pos:  0 }}: 'in'">-->
+  <!--<div>{{pane.sidepanePosition}}</div>-->
+  <!--<router-outlet #o="outlet"-->
+                 <!--(activate)='onActivate($event)'-->
+                 <!--(deactivate)='onDeactivate($event)'-->
+  <!--&gt;</router-outlet>-->
+<!--</div>-->
+
+<div class="overlay-content"
+  [@moveAnim]=stateResult>
+
+  <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
+  <router-outlet #o="outlet" (activate)="onActivate($event)"
+  ></router-outlet>
+</div>

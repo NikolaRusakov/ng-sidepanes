@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, RouteReuseStrategy } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { AddIntroducerComponent } from '../dynamic-modules/add-introducer/add-introducer.component';
 import { AddDivisionComponent } from '../dynamic-modules/add-division/add-division.component';
@@ -9,33 +9,81 @@ import { RoutingStateService } from '../routing-state.service';
 import { AddPhoneNumberComponent } from 'app/dynamic-modules/add-phonenumber/add-phone-number.component';
 
 const routes: Routes = [
-  // {
-  // path: '', redirectTo: 'app', pathMatch: 'full',
-  // },
-  {
-    path: 'app',
-    component: AppComponent,
-  },
-  {
-    path: '1',
-    component: AddIntroducerComponent,
-    children: [
-      {
-        path: '2',
-        component: AddDivisionComponent,
-        children: [
-          {
-            path: '3',
-            component: SelectPrimaryContactComponent,
-            children: [
-              {
-                path: '4',
-                component: AddPhoneNumberComponent,
-              }],
-          }],
-      }],
-  },
-];
+    // {
+    // path: '', redirectTo: 'app', pathMatch: 'full',
+    // },
+    {
+      path: 'app',
+      component: AppComponent,
+      children: [
+        {
+          path: '1',
+          component: AddIntroducerComponent,
+          children: [
+            {
+              path: '2',
+              component: AddDivisionComponent,
+              children: [
+                {
+                  path: '3',
+                  component: SelectPrimaryContactComponent,
+                  children: [
+                    {
+                      path: '4',
+                      component: AddPhoneNumberComponent,
+                    }],
+                }],
+            }],
+        },
+        {
+          path: 'short',
+          component: AddIntroducerComponent,
+          children: [
+            {
+              path: '3',
+              component: SelectPrimaryContactComponent,
+              children: [
+                {
+                  path: '4',
+                  component: AddPhoneNumberComponent,
+                }],
+            }],
+        }],
+    },
+    {
+      path: '1',
+      component: AddIntroducerComponent,
+      children: [
+        {
+          path: '2',
+          component: AddDivisionComponent,
+          children: [
+            {
+              path: '3',
+              component: SelectPrimaryContactComponent,
+              children: [
+                {
+                  path: '4',
+                  component: AddPhoneNumberComponent,
+                }],
+            }],
+        }],
+    },
+    {
+      path: 'short',
+      component: AddIntroducerComponent,
+      children: [
+        {
+          path: '3',
+          component: SelectPrimaryContactComponent,
+          children: [
+            {
+              path: '4',
+              component: AddPhoneNumberComponent,
+            }],
+        }],
+    }],
+  ];
 
 // loadChildren: './../dynamic-modules/add-introducer/add-introducer.module#AddIntroducerModule'
 
@@ -46,7 +94,12 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
   ],
   exports: [RouterModule],
-  providers: [RoutingStateService],
+  providers: [RoutingStateService,
+ /* {
+    provide: RouteReuseStrategy,
+    useClass: CustomReuseStrategy
+  },*/
+],
 })
 export class RoutingModule {
 }

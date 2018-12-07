@@ -1,9 +1,17 @@
-<div #sidepaneContainer class="card"
+<div #sidepaneContainer class="card" [style.width.px]="width"
      [ngStyle]="{
-       'right':sidepanePosition+'px',
-       '':''
-     }">
+       'z-index':1000+sidepaneIndex
+     }"
+>
+  <h1>{{sidepanePosition}}</h1>
   <ng-content select="[childComponent]">
 
   </ng-content>
 </div>
+<!--
+[@slideIn]="{
+value: animateState,
+params:{
+pos: sidepanePosition
+}
+  }"-->

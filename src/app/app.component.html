@@ -1,6 +1,15 @@
 <input type="text" placeholder="enter text" #inputComponent>
-<button type="button" (click)="loadCustom()">Show custom</button>
-<button type="button" (click)="loadMessage()">message</button>
-
+<br>
+<button type="button" (click)="switchState()">Show custom</button>
+<br>
+<button type="button" (click)="showSidepane()">show Sidepane</button>
+<br>
+<pre>{{stateResult.value}}</pre>
 <div #testOutlet></div>
-<router-outlet></router-outlet>
+<div
+        class="overlay-content"
+        [@moveAnim]="stateResult">
+
+    <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
+    <router-outlet #o="outlet" (activate)="onActivate($event,o)"></router-outlet>
+</div>

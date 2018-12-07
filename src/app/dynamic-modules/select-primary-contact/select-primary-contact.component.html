@@ -1,12 +1,19 @@
-<app-routed-sidepane>
+<app-routed-sidepane #pane [width]="300" [sidepaneIndex]="sidepaneIndex" [sidepanePosition]="sidepanePosition">
   <div childComponent>
     <p>
       select-primary-contact works!
     </p>
     <button type="button" (click)="onBack()">Go back</button>
-    <button type="button" (click)="onNavigate()">forward</button>
+    <button type="button" (click)="onNavigate(false)">forward</button>
+    <button type="button" (click)="onNavigate(true)">short version forward</button>
     <!--routerLink="../"-->
   </div>
 </app-routed-sidepane>
-<router-outlet>
-</router-outlet>
+<div class="overlay-content"
+  [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"
+     [@moveAnim]="o.isActivated ? {value:'in',params: { pos:  0 }}: 'in'">
+  <router-outlet #o="outlet"
+                 (activate)="onActivate($event)"
+                 (deactivate)='onDeactivate($event)'
+  ></router-outlet>
+</div>

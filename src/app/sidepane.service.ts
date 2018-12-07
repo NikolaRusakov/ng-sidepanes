@@ -8,6 +8,13 @@ export interface SidepaneObject {
     width: number[];
     widthState: number[];
     store: SidepaneComponent[];
+    state: SidepaneStates;
+}
+
+export interface SidepaneStates {
+    add?: boolean;
+    remove?: boolean;
+    move?: boolean;
 }
 
 @Injectable()
@@ -17,6 +24,11 @@ export class SidepaneService {
         width: [],
         widthState: [],
         store: [],
+        state: {
+            add: false,
+            remove: false,
+            move: false,
+        },
     });
 
     store: SidepaneComponent[] = [];
@@ -35,7 +47,10 @@ export class SidepaneService {
     }
 
     addSidepane(componentInstance: any) {
-        this.store.push(componentInstance);
+        this.store = [
+            ...this.store,
+            componentInstance,
+        ];
     }
 
     calculateWidthState() {
@@ -82,8 +97,23 @@ export class SidepaneService {
             width: this.sidepanesWidth,
             widthState: this.sidepanesWidthState,
             store: this.store,
+            state: {
+                add: true,
+                remove: false,
+                move: this.sidepanesWidthState.length > 1,
+            },
         });
         console.log('registered');
+        return {
+            width: this.sidepanesWidth,
+            widthState: this.sidepanesWidthState,
+            store: this.store,
+            state: {
+                add: true,
+                remove: false,
+                move: this.sidepanesWidthState.length > 1,
+            },
+        };
     }
 
     removeSidepaneInstances(position: number) {
@@ -98,7 +128,22 @@ export class SidepaneService {
             width: this.sidepanesWidth,
             widthState: this.sidepanesWidthState,
             store: this.store,
+            state: {
+                remove: true,
+                add: false,
+            },
         });
+        console.log('removed');
+        return {
+            width: this.sidepanesWidth,
+            widthState: this.sidepanesWidthState,
+            store: this.store,
+            state: {
+                remove: true,
+                add: false,
+            }
+            ,
+        };
     }
 
     loadComponent<T>(component: T, componentId: string, outlet: ViewContainerRef, customInjectorMap?: WeakMap<Type<any>, any>) {

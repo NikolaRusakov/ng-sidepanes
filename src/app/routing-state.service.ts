@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 @Injectable()
 export class RoutingStateService {
   public history = [];
+  public routeHistory = [];
 
   constructor(
     private router: Router
@@ -15,13 +16,18 @@ export class RoutingStateService {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(({urlAfterRedirects}: NavigationEnd) => {
-        // console.log(urlAfterRedirects);
+        console.log(urlAfterRedirects);
         // console.log(urlAfterRedirects.split('/'));
-        this.history = urlAfterRedirects.split('/');
+        this.history = urlAfterRedirects === '' ? [''] :
+          urlAfterRedirects.split('/');
       });
   }
 
   getHistory(): string[] {
+    return this.history;
+  }
+
+  addRoute(): string[] {
     return this.history;
   }
 
