@@ -10,10 +10,8 @@
   </div>
 </app-routed-sidepane>
 <div class="overlay-content"
-  [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"
-     [@moveAnim]="o.isActivated ? {value:'in',params: { pos:  0 }}: 'in'">
+     [@moveAnim]="stateResult">
   <router-outlet #o="outlet"
                  (activate)="onActivate($event)"
-                 (deactivate)='onDeactivate($event)'
   ></router-outlet>
 </div>

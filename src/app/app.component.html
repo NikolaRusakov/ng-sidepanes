@@ -4,12 +4,9 @@
 <br>
 <button type="button" (click)="showSidepane()">show Sidepane</button>
 <br>
-<pre>{{stateResult.value}}</pre>
 <div #testOutlet></div>
-<div
-        class="overlay-content"
+<div    class="overlay-content"
         [@moveAnim]="stateResult">
-
-    <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
-    <router-outlet #o="outlet" (activate)="onActivate($event,o)"></router-outlet>
+    <router-outlet #o="outlet" (activate)="onActivate($event,o)"
+    ></router-outlet>
 </div>

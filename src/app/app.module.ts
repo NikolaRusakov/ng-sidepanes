@@ -10,6 +10,7 @@ import { MainComponent } from './main/main.component';
 import { RoutingModule } from './routing/routing.module';
 import { AddDivisionComponent } from './dynamic-modules/add-division/add-division.component';
 import { SelectPrimaryContactComponent } from './dynamic-modules/select-primary-contact/select-primary-contact.component';
+import { AbstractSidepaneComponent } from './dynamic-modules/abstract-sidepane/abstract-sidepane.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { SelectPrimaryContactComponent } from './dynamic-modules/select-primary-
         MainComponent,
         AddDivisionComponent,
         SelectPrimaryContactComponent,
+        AbstractSidepaneComponent,
     ],
     imports: [
         // NoopAnimationsModule,

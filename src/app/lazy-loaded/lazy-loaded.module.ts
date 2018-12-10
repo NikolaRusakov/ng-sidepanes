@@ -8,6 +8,7 @@ import { MessageModule } from '../dynamic-modules/message/message.module';
 import { RoutedSidepaneModule } from '../dynamic-modules/routed-sidepane/routed-sidepane.module';
 import { AddIntroducerModule } from '../dynamic-modules/add-introducer/add-introducer.module';
 import { AddPhoneNumberModule } from '../dynamic-modules/add-phonenumber/add-phone-number.module';
+import { AnimationCanDeactivateGuard } from '../AnimationCanDeactivateGuard';
 
 const manifests: DynamicComponentManifest[] = [
   {
@@ -34,8 +35,9 @@ const manifests: DynamicComponentManifest[] = [
       DynamicComponentLoaderModule,
       MessageModule,
       RoutedSidepaneModule,
-      AddIntroducerModule
+      AddIntroducerModule,
     ],
+  providers:[AnimationCanDeactivateGuard],
 })
 export class LazyLoadedModule {
 }

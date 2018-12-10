@@ -22,57 +22,12 @@ import { SidepaneService } from '../../sidepane.service';
 import { SidepaneComponent } from '../sidepane/sidepane.component';
 import { delay } from 'rxjs/internal/operators/delay';
 
-export const slideInAnimation =
-  trigger('routeAnimations', [
-    transition('* <=> *', [
-      style({position: 'relative'}),
-      query(':enter, :leave', [
-        style({
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%'
-        })
-      ]),
-      query(':enter', [
-        style({left: '-100%'})
-      ]),
-      query(':leave', animateChild()),
-      group([
-        query(':leave', [
-          animate('300ms ease-out', style({left: '100%'}))
-        ]),
-        query(':enter', [
-          animate('300ms ease-out', style({left: '0%'}))
-        ])
-      ]),
-      query(':enter', animateChild()),
-    ]),
-    transition('* <=> FilterPage', [
-      style({position: 'relative'}),
-      query(':enter, :leave', [
-        style({
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%'
-        })
-      ]),
-      query(':enter', [
-        style({left: '-100%'})
-      ]),
-      query(':leave', animateChild()),
-      group([
-        query(':leave', [
-          animate('200ms ease-out', style({left: '100%'}))
-        ]),
-        query(':enter', [
-          animate('300ms ease-out', style({left: '0%'}))
-        ])
-      ]),
-      query(':enter', animateChild()),
-    ])
-  ]);
+export interface SidepaneTransitions {
+  out: boolean;
+  in: boolean;
+  move: boolean;
+  moveAgain: boolean;
+}
 
 @Component({
   selector: 'app-routed-sidepane',
@@ -99,10 +54,7 @@ export const slideInAnimation =
 })
 export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
 
-  private unsubscribe$ = new Subject();
-  // transition;
   values;
-  animateState: string;
   @Input()
   sidepanePosition = -1000;
 
@@ -125,9 +77,7 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
   @Output()
   submitted = new EventEmitter();
 
-  constructor(private sidepaneService: SidepaneService,
-              public elementRef: ElementRef,
-              private cdRef: ChangeDetectorRef) {
+  constructor(private sidepaneService: SidepaneService) {
     console.log(this.sidepanePosition);
   }
 
@@ -136,67 +86,19 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit() {
-    console.log(this.width);
-    console.log(this.sidepanePosition);
-    console.log(this.sidepaneIndex);
-    // this.sidepaneIndex = this.sidepaneService.store.length;
-    this.sidepaneService.addSidepane(this);
-    this.animateState = 'open';
-    // const sidepaneWidth = this.elementRef.nativeElement.children[0].offsetWidth;
-    const sidepaneWidth = this.width;
-    // console.log(sidepaneWidth);
+    // console.log(this.width);
+    // console.log(this.sidepanePosition);
     // console.log(this.sidepaneIndex);
-    // const res = this.sidepaneService.addSidepanesWidthOb(sidepaneWidth, this.sidepaneIndex);
-    // this.sidepanePosition = res.widthState[this.sidepaneIndex];
-    this.sidepaneService.storeObserve.pipe(
-      takeUntil(this.unsubscribe$),
-      delay(0))
-      .subscribe(item => {
-        // this.sidepanePosition = item.widthState[this.sidepaneIndex];
-        // console.log(item);
-        console.log(this.sidepanePosition);
-        // console.log(this.sidepaneIndex);
-      });
-    // console.log(this.elementRef.nativeElement.children[0].offsetWidth);
-    /*this.sidepaneService.storeObserve.pipe(
-      takeUntil(this.unsubscribe$),
-      // delay(0),
-      tap(item => {
-        this.sidepanePosition = item.widthState[this.sidepaneIndex];
-        console.log(item);
-        console.log(this.sidepanePosition);
-        console.log(this.sidepaneIndex);
-      })).subscribe();*/
+    this.sidepaneService.addSidepane(this);
   }
 
   ngAfterViewInit() {
-    // this.animateState = 'open';
     // this.cdRef.detectChanges();
-    // setTimeout(() => {
-    /*const sidepaneWidth = this.elementRef.nativeElement.children[0].offsetWidth;
-    console.log(sidepaneWidth);
-    console.log(this.sidepaneIndex);
-    const res = this.sidepaneService.addSidepanesWidthOb(sidepaneWidth, this.sidepaneIndex);*/
-    this.animateState = 'open';
-
-    // this.sidepanePosition = res.widthState[this.sidepaneIndex];
-    // this.sidepanePosition = 300;
-
-    this.cdRef.detectChanges();
-
-    // });
   }
 
   onClose() {
-    if (this.cmpRef) {
-      this.unsubscribe$.next();
-
-      setTimeout(() => {
-        console.log('destroy');
-        // this.cmpRef.destroy();
-      }, 2000);
-
-    }
+    // if (this.cmpRef) {
+    // }
   }
 
   onSubmit(value) {
@@ -205,7 +107,7 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnDestroy() {
     // setTimeout(() => {
-      console.log('destroy');
+    console.log('destroy');
     //   // this.cmpRef.destroy();
     //
     // }, 2000);

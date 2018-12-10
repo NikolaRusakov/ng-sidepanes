@@ -9,18 +9,10 @@
 
   </div>
 </app-routed-sidepane>
-<p>{{pane.sidepanePosition}}</p>
-<p>{{o.isActivated}}</p>
 
-<!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"-->
-<!--[@slideIn]="o.isActivated ? {value:'open',params: { pos: pane.sidepanePosition + 'px' }} : ''"-->
-<!--[@moveAnim]="o.isActivated ? 'out' : 'in'">-->
 <div class="overlay-content"
-     [@moveAnim]="sidepaneEvent? {value:'in',params: { pos:  500 },col:'purple'}: {value:'in',params: { pos:  0,col:'blue' }}">
-
-  <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
+     [@moveAnim]="stateResult">
   <router-outlet #o="outlet"
                  (activate)="onActivate($event)"
-                 (deactivate)='onDeactivate($event)'
   ></router-outlet>
 </div>

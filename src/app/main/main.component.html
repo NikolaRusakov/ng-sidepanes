@@ -1,5 +1,4 @@
 <div class="overlay-content"
-     [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"
      [@moveAnim]="o.isActivated ? '': 'in'">
   <div>{{pane.sidepanePosition}}</div>
   <router-outlet #o="outlet" (activate)="onActivate($event)"></router-outlet>

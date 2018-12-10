@@ -9,7 +9,7 @@ import { RoutingModule } from '../../routing/routing.module';
   imports: [
     CommonModule,
     RoutedSidepaneModule,
-    RoutingModule
+    RoutingModule,
   ],
   exports: [AddDivisionComponent]
 })

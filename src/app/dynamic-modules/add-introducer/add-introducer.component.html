@@ -7,24 +7,15 @@
     <button type="button" (click)="onClose()">destroy</button>
     <button type="button" (click)="onCreate()">create new</button>
     <br>
-    <button type="button" routerLink="../">Go back</button>
+    <button type="button" (click)="onBack()">Go back</button>
     <button type="button" (click)="onNavigate(false)">forward</button>
     <button type="button" (click)="onNavigate(true)">short version forward</button>
   </div>
 </app-routed-sidepane>
-<!--<div [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''"-->
-     <!--[@moveAnim]="o.isActivated ? {value:'out',params: { pos:  0 }}: 'in'">-->
-  <!--<div>{{pane.sidepanePosition}}</div>-->
-  <!--<router-outlet #o="outlet"-->
-                 <!--(activate)='onActivate($event)'-->
-                 <!--(deactivate)='onDeactivate($event)'-->
-  <!--&gt;</router-outlet>-->
-<!--</div>-->
+
 
 <div class="overlay-content"
-  [@moveAnim]=stateResult>
-
-  <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
+     [@moveAnim]=stateResult>
   <router-outlet #o="outlet" (activate)="onActivate($event)"
   ></router-outlet>
 </div>
