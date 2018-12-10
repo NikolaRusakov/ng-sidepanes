@@ -83,9 +83,6 @@ export class AppComponent implements OnInit, AfterViewInit, AnimationCanDeactiva
             takeUntil(this.unsubscribe$),
             delay(0))
             .subscribe(item => {
-                console.log(item);
-                console.log(this.sidepaneIndex);
-                console.log(this.sidepanePosition);
                 this.sidepanePosition = this.sidepaneService.getWidthState(this.sidepanePosition, this.sidepaneIndex);
                 const remove = item.state.remove && item.state.removeIndex === this.sidepaneIndex;
                 this.stateLogic(item, remove);
@@ -96,8 +93,6 @@ export class AppComponent implements OnInit, AfterViewInit, AnimationCanDeactiva
     }
 
     switchState() {
-        console.log(this.sidepanePosition);
-        console.log(this.sidepaneService.sidepanesWidthState);
         this.stateResult = {value: 'move', params: {pos: 500}};
     }
 
@@ -109,10 +104,6 @@ export class AppComponent implements OnInit, AfterViewInit, AnimationCanDeactiva
                     {value: 'moveAgain', params: {pos: -1000}} :
                     {value: 'move', params: {pos: -1000}}
             );
-            // this.router.navigate(['', '1']);
-            // setTimeout(() => {
-            //     this.router.navigate(['']);
-            // }, 1000);
         } else {
             this.stateResult = !states.state.remove && !states.state.add ||
             this.sidepaneState === 'hidden' ?

@@ -1,4 +1,4 @@
-<app-routed-sidepane #pane [width]="300" [sidepaneIndex]="sidepaneIndex" [sidepanePosition]="sidepanePosition">
+<app-routed-sidepane #pane [width]="width" [sidepaneIndex]="sidepaneIndex" [sidepanePosition]="sidepanePosition">
   <div childComponent>
     <p>
       select-primary-contact works!
@@ -11,7 +11,5 @@
 </app-routed-sidepane>
 <div class="overlay-content"
      [@moveAnim]="stateResult">
-  <router-outlet #o="outlet"
-                 (activate)="onActivate($event)"
-  ></router-outlet>
+  <router-outlet #o="outlet"></router-outlet>
 </div>

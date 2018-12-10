@@ -79,6 +79,7 @@ export class RoutedSidepaneComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(private sidepaneService: SidepaneService) {
     console.log(this.sidepanePosition);
+    console.log(this.width);
   }
 
   ngAfterViewChecked() {

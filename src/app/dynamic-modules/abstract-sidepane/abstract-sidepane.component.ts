@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { timer } from 'rxjs/internal/observable/timer';
+import { delay } from 'rxjs/internal/operators/delay';
+import { mapTo } from 'rxjs/internal/operators/mapTo';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { Subject } from 'rxjs/internal/Subject';
 import { AnimationCanDeactivateGuard } from '../../AnimationCanDeactivateGuard';
 import { RoutingStateService } from '../../routing-state.service';
 import { SidepaneObject, SidepaneService } from '../../sidepane.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { delay } from 'rxjs/internal/operators/delay';
-import { mapTo } from 'rxjs/internal/operators/mapTo';
-import { timer } from 'rxjs/internal/observable/timer';
 
 @Component({template: ''})
 export class AbstractSidepaneComponent implements OnInit, AnimationCanDeactivateGuard {
@@ -19,22 +19,20 @@ export class AbstractSidepaneComponent implements OnInit, AnimationCanDeactivate
   sidepaneIndex;
 
   sidepanePosition = -1000;
-  stateResult = {value: 'hidden', params: {pos: -400}};
-  width = 300;
+  stateResult = {value: 'hidden', params: {pos: -1000}};
+  width = 500;
 
   constructor(
-    private location: Location,
-    private router: Router,
-    private activeRouter: ActivatedRoute,
-    private routingStateService: RoutingStateService,
-    private sidepaneService: SidepaneService,
+    public router: Router,
+    public routingStateService: RoutingStateService,
+    public sidepaneService: SidepaneService,
   ) {
   }
 
   ngOnInit() {
     this.routingStateService.loadRouting();
     this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
-    const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
+    this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
     this.sidepaneIndex = this.sidepaneIndex + 1;
     this.sidepaneService.storeObserve.pipe(
       takeUntil(this.unsubscribe$),
