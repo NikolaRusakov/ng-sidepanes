@@ -7,6 +7,7 @@ import { AddDivisionComponent } from '../dynamic-modules/add-division/add-divisi
 import { SelectPrimaryContactComponent } from '../dynamic-modules/select-primary-contact/select-primary-contact.component';
 import { RoutingStateService } from '../routing-state.service';
 import { AddPhoneNumberComponent } from 'app/dynamic-modules/add-phonenumber/add-phone-number.component';
+import { AnimationCanDeactivateGuard } from '../AnimationCanDeactivateGuard';
 
 const routes: Routes = [
     // {
@@ -53,10 +54,12 @@ const routes: Routes = [
     {
       path: '1',
       component: AddIntroducerComponent,
+      // canDeactivate: [AnimationCanDeactivateGuard],
       children: [
         {
           path: '2',
           component: AddDivisionComponent,
+          canDeactivate: [AnimationCanDeactivateGuard],
           children: [
             {
               path: '3',
@@ -95,11 +98,11 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
   providers: [RoutingStateService,
- /* {
-    provide: RouteReuseStrategy,
-    useClass: CustomReuseStrategy
-  },*/
-],
+    /* {
+       provide: RouteReuseStrategy,
+       useClass: CustomReuseStrategy
+     },*/
+  ],
 })
 export class RoutingModule {
 }

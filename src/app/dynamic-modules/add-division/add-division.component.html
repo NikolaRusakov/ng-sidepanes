@@ -16,7 +16,7 @@
 <!--[@slideIn]="o.isActivated ? {value:'open',params: { pos: pane.sidepanePosition + 'px' }} : ''"-->
 <!--[@moveAnim]="o.isActivated ? 'out' : 'in'">-->
 <div class="overlay-content"
-     [@moveAnim]="sidepaneEvent? {value:'in',params: { pos:  500 },col:'purple'}: {value:'in',params: { pos:  0,col:'blue' }}">
+     [@moveAnim]="stateResult">
 
   <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
   <router-outlet #o="outlet"

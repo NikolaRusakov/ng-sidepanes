@@ -1,32 +1,36 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { fadeAnimation, moveAnim, slideIn } from '../animations/sidepane-animation';
+import { moveAnim } from '../animations/sidepane-animation';
 import { RoutedSidepaneComponent } from '../routed-sidepane/routed-sidepane.component';
-import { SidepaneService, SidepaneStates } from '../../sidepane.service';
+import { SidepaneObject, SidepaneService, SidepaneStates } from '../../sidepane.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { delay } from 'rxjs/internal/operators/delay';
 import { RoutingStateService } from '../../routing-state.service';
+import { timer } from 'rxjs/internal/observable/timer';
+import { mapTo } from 'rxjs/operators';
+import { AnimationCanDeactivateGuard } from '../../AnimationCanDeactivateGuard';
 
 @Component({
   selector: 'app-add-introducer',
   templateUrl: './add-introducer.component.html',
   styleUrls: ['./add-introducer.component.css'],
-  animations: [fadeAnimation, slideIn, moveAnim],
+  animations: [ moveAnim],
 })
-export class AddIntroducerComponent implements OnInit {
+export class AddIntroducerComponent implements OnInit, AnimationCanDeactivateGuard {
   private unsubscribe$ = new Subject();
   @ViewChild(RoutedSidepaneComponent)
   sidepaneInstance;
-  sidepaneState;
+  sidepaneState = 'hidden';
 
   sidepaneIndex;
 
   sidepanePosition = -1000;
   width = 400;
-  stateResult;
-  sidepaneEvent: SidepaneStates = {add: false, remove: false};
+  stateResult = {value: 'hidden', params: {pos: -1000}};
+
+  // sidepaneEvent: SidepaneStates = {add: false, remove: false};
 
   constructor(
     private location: Location,
@@ -35,6 +39,9 @@ export class AddIntroducerComponent implements OnInit {
     private sidepaneService: SidepaneService,
     private routingStateService: RoutingStateService
   ) {
+    this.routingStateService.loadRouting();
+    console.log(location.path());
+    console.log(activatedRoute);
   }
 
   ngOnInit() {
@@ -44,25 +51,11 @@ export class AddIntroducerComponent implements OnInit {
       }
     });
     console.log('second');
-    this.sidepaneState = 'hidden';
-    const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
     this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
     console.log(this.sidepaneIndex);
-    console.log(res.widthState[this.sidepaneIndex]);
-    // this.sidepanePosition = res.widthState[this.sidepaneIndex];
+    const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
     console.log(res);
-    this.stateLogic();
-    // console.log(this.router);
-    // console.log(this.activatedRoute);
-    // console.log(this.location.path());
-    // this.routingStateService.loadRouting();
-    // console.log(this.routingStateService.history);
-    /*this.sidepaneIndex = this.sidepaneService.store.length;
-    const res = this.sidepaneService.addSidepanesWidthOb(500, this.sidepaneIndex);
-    this.sidepanePosition = res.widthState[this.sidepaneIndex];
-    this.sidepaneEvent = {...res.state};
-    this.sidepaneService.parent = this;*/
-    // this.stateLogic();
+    this.sidepaneIndex = this.sidepaneIndex + 1;
 
     this.sidepaneService.storeObserve.pipe(
       takeUntil(this.unsubscribe$),
@@ -70,82 +63,67 @@ export class AddIntroducerComponent implements OnInit {
       .subscribe(item => {
         console.log(item);
         console.log(this.sidepaneIndex);
-        this.sidepanePosition = item.widthState[this.sidepaneIndex];
         console.log(this.sidepanePosition);
-        this.sidepaneEvent = {...item.state};
-        this.stateLogic();
+        this.sidepanePosition = this.sidepaneService.getWidthState(this.sidepanePosition, this.sidepaneIndex);
+        const remove = item.state.remove && item.state.removeIndex === this.sidepaneIndex;
+        this.stateLogic(item, remove);
       });
   }
 
-  onSubmit(value) {
-
-    // this.sidepaneComponent.submitted.emit(value);
-    // this.sidepaneComponent.onSubmit(value);
-  }
-
-  onClose() {
-    // this.sidepaneComponent.onClose();
-  }
-
   onNavigate(short: boolean) {
-
-    /* this.sidepaneIndex = this.sidepaneService.store.length;
-     const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
-     this.sidepanePosition = res.widthState[this.sidepaneIndex];
-     console.log(res);
-     console.log(this.sidepanePosition);
-
-     console.log(this.sidepaneEvent);*/
-    // this.sidepaneService.storeObserve.pipe(
-    //   takeUntil(this.unsubscribe$),
-    //   delay(0))
-    //   .subscribe(item => {
-    //     console.log(item);
-    //     this.sidepanePosition = item.widthState[this.sidepaneIndex];
-    //     this.sidepaneEvent = {...item.state};
-    //     this.stateLogic(this.sidepaneEvent);
-    //   });
     short ? this.router.navigate(['short', '3']) :
       this.router.navigate(['1', '2']);
-  }
-
-  onCreate() {
-    //   this.sidepaneService.parent.loadCustom();
   }
 
   onActivate(componentRef) {
     console.log(componentRef.sidepaneInstance.sidepanePosition);
   }
 
-  onBack() {
-    this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex);
-    console.log('destroy event');
-    setTimeout(() => {
-      this.router.navigate([this.routingStateService.getPreviousUrl()]);
-    }, 5000);
-
+  onDeactivate(componentRef) {
+    console.log(this.stateResult);
+    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1, [this.routingStateService.getPreviousUrl()]);
   }
 
-  stateLogic() {
-    console.log(this.sidepaneEvent);
-    console.log(this.sidepanePosition);
-    console.log(this.sidepaneIndex);
-    console.log(this.stateResult);
-    console.log(this.sidepaneState);
-    this.stateResult = (!this.sidepaneEvent.remove && !this.sidepaneEvent.add ||
-      this.sidepaneState === 'hidden' && this.sidepanePosition === undefined) ?
-      {value: 'hidden', params: {pos: -1000, col: 'red'}} :
-      (this.sidepaneEvent.add && !this.sidepaneEvent.move ?
-        {value: 'in', params: {pos: this.sidepanePosition, col: 'blue'}} :
-        {value: 'move', params: {pos: this.sidepanePosition}});
-    // this.sidepaneState = 'in';
-    // "sidepaneEvent? {value:'out',params: { pos:  0 },col:'purple'}: {value:'in',params: { pos:  sidepanePosition,col:'blue' }}"
-    /*this.stateResult = !this.sidepaneEvent.remove && !this.sidepaneEvent.add ?
-      {value: 'hidden', params: {pos: -1500}} :
-      (this.sidepaneEvent.add ?
-        {value: 'out', params: {pos: this.sidepanePosition}} :
-        {value: 'in', params: {pos: this.sidepanePosition}});*/
-    console.log(this.stateResult);
-    console.log(this.sidepaneState);
+  canDeactivate(navigate) {
+    this.stateResult = (this.stateResult.value === 'move' ?
+      {value: 'moveAgain', params: {pos: -1000}} :
+      {value: 'move', params: {pos: -1000}});
+    // this.router.navigate(navigate);
+    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex);
+    return timer(750).pipe(mapTo(true)).toPromise();
+  }
+
+  onBack() {
+    console.log('back');
+    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1);
+    // console.log('destroy event');
+    console.log(this.routingStateService.getPreviousUrl());
+    this.router.navigate([this.routingStateService.getPreviousUrl()]);
+    // setTimeout(() => {
+    // }, 1500);
+  }
+
+  stateLogic(states: SidepaneObject, remove) {
+    if (remove && states.state.remove) {
+      console.log('removing');
+
+      this.stateResult = (this.stateResult.value === 'move' ?
+          {value: 'moveAgain', params: {pos: -1000}} :
+          {value: 'move', params: {pos: -1000}}
+      );
+      // this.router.navigate(['', '1']);
+      setTimeout(() => {
+        this.router.navigate(['', '1']);
+      }, 1000);
+    } else {
+      this.stateResult = !states.state.remove && !states.state.add ||
+      this.sidepaneState === 'hidden' ?
+        {value: 'hidden', params: {pos: -1000}} :
+        (this.stateResult.value === 'move' ?
+            {value: 'moveAgain', params: {pos: this.sidepanePosition}} :
+            {value: 'move', params: {pos: this.sidepanePosition}}
+        );
+    }
+    this.sidepaneState = 'in';
   }
 }

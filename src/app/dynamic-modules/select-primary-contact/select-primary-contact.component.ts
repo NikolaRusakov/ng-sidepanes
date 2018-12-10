@@ -2,8 +2,8 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoutingStateService } from '../../routing-state.service';
-import { fadeAnimation, moveAnim } from '../animations/sidepane-animation';
-import { SidepaneService } from '../../sidepane.service';
+import { moveAnim } from '../animations/sidepane-animation';
+import { SidepaneService, SidepaneStates } from '../../sidepane.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { delay } from 'rxjs/internal/operators/delay';
@@ -12,16 +12,17 @@ import { delay } from 'rxjs/internal/operators/delay';
   selector: 'app-select-primary-contact',
   templateUrl: './select-primary-contact.component.html',
   styleUrls: ['./select-primary-contact.component.css'],
-  animations: [fadeAnimation, moveAnim],
+  animations: [moveAnim],
 })
 export class SelectPrimaryContactComponent implements OnInit {
   private unsubscribe$ = new Subject();
-  sidepaneState;
+  sidepaneState = 'hidden';
   sidepaneInstance;
 
   sidepaneIndex;
 
-  sidepanePosition;
+  sidepanePosition = -1000;
+  stateResult = {value: 'hidden', params: {pos: -400}};
   width = 300;
 
   constructor(
@@ -31,24 +32,45 @@ export class SelectPrimaryContactComponent implements OnInit {
     private routingStateService: RoutingStateService,
     private sidepaneService: SidepaneService,
   ) {
-    routingStateService.loadRouting();
-
-    // console.log(routingStateService.history);
   }
 
   ngOnInit() {
-    const sidepaneWidth = this.width;
-
+    this.routingStateService.loadRouting();
     this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
-    const res = this.sidepaneService.addSidepanesWidthOb(sidepaneWidth, this.sidepaneIndex);
-    this.sidepanePosition = res.widthState[this.sidepaneIndex];
-    console.log(this.sidepanePosition);
+    const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
+    this.sidepaneIndex = this.sidepaneIndex + 1;
+    console.log(this.sidepaneIndex);
+    console.log(res);
+    // this.sidepanePosition = res.widthState[this.sidepaneIndex];
+    // console.log(this.sidepanePosition);
     this.sidepaneService.storeObserve.pipe(
       takeUntil(this.unsubscribe$),
       delay(0))
       .subscribe(item => {
+        console.log(item);
         // this.sidepanePosition = item.widthState[this.sidepaneIndex];
+        console.log(this.sidepaneIndex);
+        this.sidepanePosition = this.sidepaneService.getWidthState(this.sidepanePosition, this.sidepaneIndex);
+        // console.log(this.sidepanePosition);
+        console.log(this.sidepanePosition);
+        // this.sidepaneEvent = {...item.state};
+        this.stateLogic(item.state);
       });
+  }
+
+  stateLogic(states: SidepaneStates) {
+    // console.log(this.sidepaneEvent);
+    // console.log(this.sidepanePosition);
+    this.stateResult = !states.remove && !states.add ||
+    this.sidepaneState === 'hidden' ?
+      {value: 'hidden', params: {pos: -400}} :
+      (this.stateResult.value === 'move' ?
+          {value: 'moveAgain', params: {pos: this.sidepanePosition}} :
+          {value: 'move', params: {pos: this.sidepanePosition}}
+      );
+    this.sidepaneState = 'in';
+    // console.log(this.stateResult);
+
   }
 
   onNavigate(short: boolean) {
@@ -62,15 +84,23 @@ export class SelectPrimaryContactComponent implements OnInit {
   }
 
   onDeactivate(componentRef) {
-    console.log(componentRef);
+    console.log('destroy event');
+    this.sidepaneState = 'hidden';
+    // setTimeout(() => {
+    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex);
+    // }, 1500);
+    // setTimeout(() => {
+    //   this.router.navigate([this.routingStateService.getPreviousUrl()]);
+    // }, 1500);
   }
 
   onBack() {
-    this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex);
-    console.log('destroy event');
-    setTimeout(() => {
-      this.router.navigate([this.routingStateService.getPreviousUrl()]);
-    }, 5000);
+    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1);
+    // console.log('destroy event');
+    console.log('back');
+    // setTimeout(() => {
+    this.router.navigate([this.routingStateService.getPreviousUrl()]);
+    // }, 1500);
 
   }
 }

@@ -4,12 +4,25 @@
 <br>
 <button type="button" (click)="showSidepane()">show Sidepane</button>
 <br>
+<!--<button type="button" (click)="showSidepane()">redirect</button>
+<br>
+<button type="button" (click)="stateResult = {value: 'in', params: {pos: 0, col: 'blue'}}">in</button>
+<br>
+<button type="button" (click)="stateResult = {value: 'move', params: {pos: 500, col: 'blue'}}">move</button>
+<br>
+<button type="button" (click)="stateResult = {value: 'move', params: {pos: 0, col: 'blue'}}">move 0</button>
+<br>
+<button type="button" (click)="stateResult = {value: 'in', params: {pos: 600, col: 'blue'}}">move back</button>
+<br>
+<button type="button" (click)="stateResult = {value: 'move', params: {pos: 600, col: 'blue'}}">move back</button>
+<br>
+<button type="button" (click)="showSidepane()">show Sidepane</button>
+<br>-->
 <pre>{{stateResult.value}}</pre>
 <div #testOutlet></div>
-<div
-        class="overlay-content"
+<div    class="overlay-content"
         [@moveAnim]="stateResult">
-
-    <!--<main [@fadeAnimation]="o.isActivated ? o.activatedRoute : ''">-->
-    <router-outlet #o="outlet" (activate)="onActivate($event,o)"></router-outlet>
+    <router-outlet #o="outlet" (activate)="onActivate($event,o)"
+                   (deactivate)="onDeactivate($event)"
+    ></router-outlet>
 </div>

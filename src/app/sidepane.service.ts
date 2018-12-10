@@ -14,6 +14,7 @@ export interface SidepaneObject {
 export interface SidepaneStates {
     add?: boolean;
     remove?: boolean;
+    removeIndex?: number;
     move?: boolean;
 }
 
@@ -116,7 +117,7 @@ export class SidepaneService {
         };
     }
 
-    removeSidepaneInstances(position: number) {
+    removeSidepaneInstances(position: number, removePath) {
         this.store = this.store.filter((item, index) => this.indexAccumulator[position] !== index);
         this.sidepanesWidth = this.sidepanesWidth.filter((item, index) => this.indexAccumulator[position] !== index);
         this.indexAccumulator = this.indexAccumulator.filter((item, index) => this.indexAccumulator[position] !== index);
@@ -130,6 +131,7 @@ export class SidepaneService {
             store: this.store,
             state: {
                 remove: true,
+                removeIndex: position,
                 add: false,
             },
         });
@@ -140,10 +142,23 @@ export class SidepaneService {
             store: this.store,
             state: {
                 remove: true,
+                removeIndex: position,
                 add: false,
             }
             ,
         };
+    }
+
+    getWidthState(currentPosition, index: number): number {
+        return this.sidepanesWidthState.length - 1 < index ? currentPosition : this.sidepanesWidthState[index];
+    }
+
+    removeCurrent(index: number): boolean {
+        const currentIndex = this.indexAccumulator.indexOf(index);
+        console.log(this.indexAccumulator);
+        console.log(index);
+        console.log(currentIndex);
+        return currentIndex === -1;
     }
 
     loadComponent<T>(component: T, componentId: string, outlet: ViewContainerRef, customInjectorMap?: WeakMap<Type<any>, any>) {

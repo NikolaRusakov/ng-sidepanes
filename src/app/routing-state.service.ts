@@ -21,6 +21,7 @@ export class RoutingStateService {
         this.history = urlAfterRedirects === '' ? [''] :
           urlAfterRedirects.split('/');
       });
+    // #todo unsubscribe
   }
 
   getHistory(): string[] {
@@ -36,6 +37,7 @@ export class RoutingStateService {
     const previousIndex = this.history.length - 2;
     const previousRoute = this.history.filter((index, item) => index > 0 && index <= previousIndex)
       .map(item => `/${item}`).join('');
-    return previousRoute || '/app';
+    console.log(previousRoute);
+    return previousRoute || '/';
   }
 }
