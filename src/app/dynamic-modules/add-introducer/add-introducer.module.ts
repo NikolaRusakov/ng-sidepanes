@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AddIntroducerComponent } from './add-introducer.component';
 import { RoutedSidepaneModule } from '../routed-sidepane/routed-sidepane.module';
 import { RoutingModule } from '../../routing/routing.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -10,6 +11,7 @@ import { RoutingModule } from '../../routing/routing.module';
     ],
     imports: [
         // DynamicComponentLoaderModule.forChild(AddIntroducerComponent),
+      CommonModule,
       RoutingModule,
       RoutedSidepaneModule,
 

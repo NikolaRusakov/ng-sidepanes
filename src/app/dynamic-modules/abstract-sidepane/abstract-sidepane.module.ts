@@ -1,10 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { AbstractSidepaneComponent } from './abstract-sidepane.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [AbstractSidepaneComponent],
   imports: [
-    CommonModule
-  ]
+    CommonModule,
+  ], exports: [AbstractSidepaneComponent],
 })
-export class AbstractSidepaneModule { }
+export class AbstractSidepaneModule {
+}

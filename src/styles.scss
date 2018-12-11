@@ -14,3 +14,14 @@ router-outlet ~ * {
   top: 0px;
   height: 100%;
 }
+
+.ui-overlay{
+    background-color: #666666;
+    opacity: .50;
+    filter:Alpha(Opacity=50);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+}

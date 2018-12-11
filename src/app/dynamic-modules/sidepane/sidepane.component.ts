@@ -105,12 +105,12 @@ export class SidepaneComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
       .subscribe(item => {
         console.log(item.widthState[this.sidepaneIndex]);
         const checkInitialPos = this.sidepanePosition !== undefined;
-        const checkPos = item.remove &&
-          !item.remove.removeLast &&
-          this.sidepaneIndex >= item.remove.index &&
-          this.sidepaneIndex !== 0;
-        this.sidepaneIndex = (checkInitialPos && checkPos) ?
-          (this.sidepaneIndex - 1) : this.sidepaneIndex;
+        // const checkPos = item.remove &&
+        //   !item.remove.removeLast &&
+        //   this.sidepaneIndex >= item.remove.index &&
+        //   this.sidepaneIndex !== 0;
+        // this.sidepaneIndex = (checkInitialPos && checkPos) ?
+        //   (this.sidepaneIndex - 1) : this.sidepaneIndex;
 
         this.sidepanePosition = item.widthState[this.sidepaneIndex];
       });
@@ -118,7 +118,7 @@ export class SidepaneComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
 
   ngAfterViewInit() {
     const sidepaneWidth = this.elementRef.nativeElement.children[0].offsetWidth;
-    this.factoryService.addSidepanesWidthOb(sidepaneWidth);
+    // this.factoryService.addSidepanesWidthOb(sidepaneWidth);
   }
 
   loadAndInitialize(dynamicComponents) {
@@ -148,6 +148,6 @@ export class SidepaneComponent implements OnInit, AfterViewInit, OnDestroy, OnCh
   }
 
   ngOnDestroy() {
-    this.factoryService.removeSidepaneInstances(this.sidepaneIndex);
+    // this.factoryService.removeSidepaneInstances(this.sidepaneIndex);
   }
 }

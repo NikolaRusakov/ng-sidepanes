@@ -1,155 +1,73 @@
 import {
-    AfterViewInit,
-    Component,
-    ComponentRef,
-    ElementRef,
-    Injector,
-    OnInit,
-    QueryList,
-    Type,
-    ViewChild,
-    ViewChildren,
-    ViewContainerRef,
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
-import { Location } from '@angular/common';
-import { DynamicComponentLoader } from './dynamic-component-loader/dynamic-component-loader.service';
-import { CustomInjector, SidepaneData } from './dynamic-modules/custom-injector';
+import { Router } from '@angular/router';
+import { AnimationCanDeactivateGuard } from './AnimationCanDeactivateGuard';
+import { AbstractParentSidepaneComponent } from './dynamic-modules/abstract-parent-sidepane/abstract-parent-sidepane.component';
+import { moveAnim } from './dynamic-modules/animations/sidepane-animation';
+import { SidepaneData } from './dynamic-modules/custom-injector';
 import { MessageComponent } from './dynamic-modules/message/message.component';
 import { SidepaneRef } from './dynamic-modules/sidepane-ref';
-import { SidepaneComponent } from './dynamic-modules/sidepane/sidepane.component';
-import { SidepaneObject, SidepaneService, SidepaneStates } from './sidepane.service';
-import { moveAnim } from './dynamic-modules/animations/sidepane-animation';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { delay } from 'rxjs/internal/operators/delay';
 import { RoutingStateService } from './routing-state.service';
-import { timer } from 'rxjs/internal/observable/timer';
-import { mapTo } from 'rxjs/internal/operators/mapTo';
-import { AnimationCanDeactivateGuard } from './AnimationCanDeactivateGuard';
+import { SidepaneService } from './sidepane.service';
 
 export function* sum() {
-    let num = 1;
-    while (true) {
-        yield num;
-        num = num + 1;
-    }
+  let num = 1;
+  while (true) {
+    yield num;
+    num = num + 1;
+  }
 }
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    providers: [SidepaneService],
-    animations: [moveAnim],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  providers: [SidepaneService],
+  animations: [moveAnim],
 })
-export class AppComponent implements OnInit, AfterViewInit, AnimationCanDeactivateGuard {
-    private unsubscribe$ = new Subject();
-    sidepaneInstance;
-    sidepaneState = 'hidden';
+export class AppComponent extends AbstractParentSidepaneComponent implements OnInit, AfterViewInit, AnimationCanDeactivateGuard {
+  width: 300;
 
-    sidepaneIndex;
+  @ViewChild('inputComponent')
+  inputComponent;
 
-    sidepanePosition = -1000;
-    stateResult = {value: 'hidden', params: {pos: -400}};
+  gen = sum();
 
-    width: 300;
-    componentRef: ComponentRef<any>;
+  constructor(
+    sidepaneService: SidepaneService,
+    router: Router,
+    routingStateService: RoutingStateService,
+  ) {
+    super(router, routingStateService, sidepaneService);
+  }
 
-    @ViewChild('testOutlet', {read: ViewContainerRef}) testOutlet: ViewContainerRef;
+  ngOnInit() {
+    super.ngOnInit();
+  }
 
-    @ViewChild('inputComponent')
-    inputComponent;
+  ngAfterViewInit() {
+  }
 
-    @ViewChild('testOutlet', {read: ElementRef}) elementRef: ElementRef;
+  showSidepane() {
+    this.router.navigate(['1']);
+  }
 
-    gen = sum();
-
-    constructor(
-        private dynamicComponentLoader: DynamicComponentLoader,
-        private sidepaneService: SidepaneService,
-        private injector: Injector,
-        private router: Router,
-        private location: Location,
-        private activatedRoute: ActivatedRoute,
-        private routingStateService: RoutingStateService,
-    ) {
-    }
-
-    ngOnInit() {
-        console.log('first');
-        this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
-        console.log(this.sidepaneIndex);
-        this.sidepaneService.storeObserve.pipe(
-            takeUntil(this.unsubscribe$),
-            delay(0))
-            .subscribe(item => {
-                this.sidepanePosition = this.sidepaneService.getWidthState(this.sidepanePosition, this.sidepaneIndex);
-                const remove = item.state.remove && item.state.removeIndex === this.sidepaneIndex;
-                this.stateLogic(item, remove);
-            });
-    }
-
-    ngAfterViewInit() {
-    }
-
-    switchState() {
-        this.stateResult = {value: 'move', params: {pos: 500}};
-    }
-
-    stateLogic(states: SidepaneObject, remove) {
-        if (remove && states.state.remove) {
-            console.log('removing');
-
-            this.stateResult = (this.stateResult.value === 'move' ?
-                    {value: 'moveAgain', params: {pos: -1000}} :
-                    {value: 'move', params: {pos: -1000}}
-            );
-        } else {
-            this.stateResult = !states.state.remove && !states.state.add ||
-            this.sidepaneState === 'hidden' ?
-                {value: 'hidden', params: {pos: -1000}} :
-                (this.stateResult.value === 'move' ?
-                        {value: 'moveAgain', params: {pos: this.sidepanePosition}} :
-                        {value: 'move', params: {pos: this.sidepanePosition}}
-                );
-        }
-        this.sidepaneState = 'in';
-    }
-
-    showSidepane() {
-        this.router.navigate(['1']);
-
-    }
-
-    onActivate(componentRef, outlet) {
-        console.log(outlet);
-        console.log(componentRef);
-    }
-
-    canDeactivate(navigate) {
-        /*this.stateResult = (this.stateResult.value === 'move' ?
-            {value: 'moveAgain', params: {pos: -1000}} :
-            {value: 'move', params: {pos: -1000}});*/
-        console.log(this.stateResult);
-        this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1, [this.routingStateService.getPreviousUrl()]);
-        return timer(500).pipe(mapTo(true)).toPromise();
-    }
-
-    loadCustom() {
-
-        const config = {
-            data: {
-                content: this.gen.next().value,
-                open: true,
-                dynamicComponents: {
-                    childComponent: MessageComponent,
-                },
-            },
-        };
-        const map = new WeakMap();
-        map.set(SidepaneData, config);
-        const sidepaneRef = new SidepaneRef();
-        map.set(SidepaneRef, sidepaneRef);
-        this.sidepaneService.loadComponent(SidepaneComponent, 'sidepane', this.testOutlet, map);
-    }
+  loadCustom() {
+    const config = {
+      data: {
+        content: this.gen.next().value,
+        open: true,
+        dynamicComponents: {
+          childComponent: MessageComponent,
+        },
+      },
+    };
+    const map = new WeakMap();
+    map.set(SidepaneData, config);
+    const sidepaneRef = new SidepaneRef();
+    map.set(SidepaneRef, sidepaneRef);
+  }
 }

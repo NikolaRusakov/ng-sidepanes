@@ -1,12 +1,18 @@
 <input type="text" placeholder="enter text" #inputComponent>
 <br>
-<button type="button" (click)="switchState()">Show custom</button>
-<br>
 <button type="button" (click)="showSidepane()">show Sidepane</button>
 <br>
-<div #testOutlet></div>
-<div    class="overlay-content"
-        [@moveAnim]="stateResult">
-    <router-outlet #o="outlet" (activate)="onActivate($event,o)"
-    ></router-outlet>
+
+<div class="ui-overlay" *ngIf="o.isActivated"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }">
+</div>
+<div class="overlay-content"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }"
+     [@moveAnim]="stateResult">
+  <router-outlet #o="outlet"
+  ></router-outlet>
 </div>

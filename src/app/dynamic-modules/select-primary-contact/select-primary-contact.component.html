@@ -9,7 +9,16 @@
     <!--routerLink="../"-->
   </div>
 </app-routed-sidepane>
+<div class="ui-overlay" *ngIf="o.isActivated"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }">
+</div>
 <div class="overlay-content"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }"
      [@moveAnim]="stateResult">
   <router-outlet #o="outlet"></router-outlet>
 </div>
+

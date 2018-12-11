@@ -1,44 +1,32 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RoutingStateService } from '../../routing-state.service';
-import { SidepaneObject, SidepaneService, SidepaneStates } from '../../sidepane.service';
-import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { delay } from 'rxjs/internal/operators/delay';
+import { Router } from '@angular/router';
 import { AnimationCanDeactivateGuard } from '../../AnimationCanDeactivateGuard';
-import { timer } from 'rxjs/internal/observable/timer';
-import { mapTo } from 'rxjs/internal/operators/mapTo';
+import { RoutingStateService } from '../../routing-state.service';
+import { SidepaneService } from '../../sidepane.service';
+import { AbstractSidepaneComponent } from '../abstract-sidepane/abstract-sidepane.component';
 
 @Component({
   selector: 'app-add-phone-number',
   templateUrl: './add-phone-number.component.html',
-  styleUrls: ['./add-phone-number.component.css']
+  styleUrls: ['./add-phone-number.component.css'],
 })
-export class AddPhoneNumberComponent implements OnInit, AnimationCanDeactivateGuard {
-  private unsubscribe$ = new Subject();
-  sidepaneState = 'hidden';
-  sidepaneInstance;
-
-  sidepaneIndex;
-
-  sidepanePosition = -1000;
-  stateResult = {value: 'hidden', params: {pos: -400}};
+export class AddPhoneNumberComponent extends AbstractSidepaneComponent implements OnInit, AnimationCanDeactivateGuard {
   width = 200;
 
   constructor(
-    private location: Location,
-    private router: Router,
-    private activeRouter: ActivatedRoute,
-    private routingStateService: RoutingStateService,
-    private sidepaneService: SidepaneService,
+    public router: Router,
+    public routingStateService: RoutingStateService,
+    public sidepaneService: SidepaneService,
   ) {
-    routingStateService.loadRouting();
-
-    // console.log(routingStateService.history);
+    super(router, routingStateService, sidepaneService);
   }
 
   ngOnInit() {
+    super.ngOnInit();
+  }
+
+  /*ngOnInit() {
+    this.routingStateService.loadRouting();
     this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
     const res = this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
     this.sidepaneIndex = this.sidepaneIndex + 1;
@@ -84,28 +72,16 @@ export class AddPhoneNumberComponent implements OnInit, AnimationCanDeactivateGu
   }
 
   canDeactivate(navigate) {
-    /*this.stateResult = (this.stateResult.value === 'move' ?
+    /!*this.stateResult = (this.stateResult.value === 'move' ?
         {value: 'moveAgain', params: {pos: -1000}} :
-        {value: 'move', params: {pos: -1000}});*/
+        {value: 'move', params: {pos: -1000}});*!/
     console.log(this.stateResult);
     this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1, [this.routingStateService.getPreviousUrl()]);
     return timer(300).pipe(mapTo(true)).toPromise();
   }
+*/
+    onBack() {
+      this.router.navigate([this.routingStateService.getPreviousUrl()]);
 
-  onBack() {
-    // console.log(this.sidepaneIndex);
-    // this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1);
-    // console.log('destroy event');
-    // setTimeout(() => {
-    console.log('back');
-    // this.stateResult = (this.stateResult.value === 'move' ?
-    //     {value: 'moveAgain', params: {pos: -1000}} :
-    //     {value: 'move', params: {pos: -1000}}
-    // );
-
-    // console.log(this.routingStateService.getPreviousUrl());
-    this.router.navigate([this.routingStateService.getPreviousUrl()]);
-    // }, 1500);
-
-  }
+    }
 }

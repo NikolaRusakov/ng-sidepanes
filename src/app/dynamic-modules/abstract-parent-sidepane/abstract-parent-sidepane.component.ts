@@ -6,18 +6,12 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { mapTo } from 'rxjs/internal/operators/mapTo';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs/internal/Subject';
-import { AnimationCanDeactivateGuard } from '../../AnimationCanDeactivateGuard';
 import { RoutingStateService } from '../../routing-state.service';
 import { SidepaneObject, SidepaneService } from '../../sidepane.service';
-
-export interface DynamicAnimation {
-  value: string;
-  params?: object;
-}
+import { DynamicAnimation } from '../abstract-sidepane/abstract-sidepane.component';
 
 @Component({template: ''})
-export class AbstractSidepaneComponent implements OnInit, OnDestroy, AnimationCanDeactivateGuard {
-
+export class AbstractParentSidepaneComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject();
   private sidepaneState = 'hidden';
 
@@ -46,8 +40,6 @@ export class AbstractSidepaneComponent implements OnInit, OnDestroy, AnimationCa
 
   ngOnInit() {
     this.sidepaneIndex = this.sidepaneService.sidepanesWidth.length;
-    this.sidepaneService.addSidepanesWidthOb(this.width, this.sidepaneIndex);
-    this.sidepaneIndex = this.sidepaneIndex + 1;
     this.sidepaneService.storeObserve.pipe(
       takeUntil(this.unsubscribe$),
       delay(0))
@@ -77,7 +69,7 @@ export class AbstractSidepaneComponent implements OnInit, OnDestroy, AnimationCa
   }
 
   canDeactivate() {
-    this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex - 1);
+    this.sidepaneService.removeSidepaneInstances(this.sidepaneIndex);
     return timer(200).pipe(mapTo(true)).toPromise();
   }
 

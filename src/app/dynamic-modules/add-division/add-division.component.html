@@ -6,13 +6,21 @@
     </p>
     <button type="button" (click)="onBack()">Go back</button>
     <button type="button" (click)="onNavigate()">forward</button>
+    <button type="button" (click)="onNavigateAnother()">forward another</button>
 
   </div>
 </app-routed-sidepane>
 
+<div class="ui-overlay" *ngIf="o.isActivated"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }">
+</div>
 <div class="overlay-content"
-     [@moveAnim]="stateResult">
+     [@moveAnim]="stateResult"
+     [ngStyle]="{
+       'z-index':9000+sidepaneIndex
+     }">
   <router-outlet #o="outlet"
-                 (activate)="onActivate($event)"
   ></router-outlet>
 </div>

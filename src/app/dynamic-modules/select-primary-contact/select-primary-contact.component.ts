@@ -19,7 +19,7 @@ import { AbstractSidepaneComponent } from '../abstract-sidepane/abstract-sidepan
   animations: [moveAnim],
 })
 export class SelectPrimaryContactComponent extends AbstractSidepaneComponent {
-  width = 800;
+  width = 300;
 
   constructor(
     // private location: Location,

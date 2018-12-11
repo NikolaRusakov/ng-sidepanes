@@ -11,27 +11,30 @@ import { RoutingModule } from './routing/routing.module';
 import { AddDivisionComponent } from './dynamic-modules/add-division/add-division.component';
 import { SelectPrimaryContactComponent } from './dynamic-modules/select-primary-contact/select-primary-contact.component';
 import { AbstractSidepaneComponent } from './dynamic-modules/abstract-sidepane/abstract-sidepane.component';
+import { CommonModule } from '@angular/common';
+import { AbstractParentSidepaneComponent } from './dynamic-modules/abstract-parent-sidepane/abstract-parent-sidepane.component';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        MainComponent,
-        AddDivisionComponent,
-        SelectPrimaryContactComponent,
-        AbstractSidepaneComponent,
-    ],
-    imports: [
-        // NoopAnimationsModule,
-        BrowserAnimationsModule,
-        BrowserModule,
-        RoutingModule,
-        LazyLoadedModule,
-    ],
-    providers: [
-    ],
-    bootstrap: [
-        AppComponent,
-    ],
+  declarations: [
+    AppComponent,
+    MainComponent,
+    AddDivisionComponent,
+    SelectPrimaryContactComponent,
+    AbstractSidepaneComponent,
+    AbstractParentSidepaneComponent,
+  ],
+  imports: [
+    // NoopAnimationsModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    RoutingModule,
+    LazyLoadedModule,
+  ],
+  providers: [],
+  bootstrap: [
+    AppComponent,
+  ],
 })
 export class AppModule {
 }

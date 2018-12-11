@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { AddDivisionComponent } from './dynamic-modules/add-division/add-division.component';
 
-import { FilePreviewOverlayComponent } from './file-preview-overlay.component';
 
 interface SidepaneBackdropConfig {
   panelClass?: string;
@@ -33,7 +33,7 @@ export class BackdropService {
     const overlayRef = this.createOverlay(dialogConfig);
 
     // Create ComponentPortal that can be attached to a PortalHost
-    const filePreviewPortal = new ComponentPortal(FilePreviewOverlayComponent);
+    const filePreviewPortal = new ComponentPortal(AddDivisionComponent);
 
     // Attach ComponentPortal to PortalHost
     overlayRef.attach(filePreviewPortal);

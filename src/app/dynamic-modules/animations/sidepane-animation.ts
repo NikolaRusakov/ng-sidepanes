@@ -38,6 +38,6 @@ export const moveAnim = trigger('moveAnim',
       params: {pos: '0', col: '*'},
     },
   ),
-    transition('* <=> *', animate('1000ms ease-in-out')),
+    transition('* <=> *', animate('750ms ease')),
   ],
 );
